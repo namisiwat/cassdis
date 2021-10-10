@@ -1,24 +1,22 @@
+import os
 import tensorflow as tf 
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+if tf.test.gpu_device_name():
+    print('GPU found')
+else:
+    print("No GPU found")
+  # No GPU found
 import numpy as np 
 from PIL import Image, ImageOps	
 import cv2
-
-
 def process_image(img, img_size=(224, 224)):
-  """
-  This function is used to pre-process any chosen picture by the user
-  to the appropriate format that the model accepts.
-  Parameters:
-    img: The input Image, opened using the PIL library
-    img_size: Defaults to (224, 224) because it is the size that the 
-              model accepts
-  Returns:
-    An Image array that is ready to be fed into the model.
-  """
+
   # reshapes the image
   image = ImageOps.fit(img, img_size, Image.ANTIALIAS)
+  
   # converts the image into numpy array
   image = np.asarray(image)
+  
   # converts image from BGR color space to RGB
   img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
   img_resize = (cv2.resize(img, dsize=img_size, interpolation=cv2.INTER_CUBIC))/255.
@@ -29,15 +27,7 @@ def process_image(img, img_size=(224, 224)):
 
 
 def prediction_result(model, image_data):
-  """
-  The function that returns the prediction result from the model
-  Parameters:
-    model: The model to be used to classify
-    image_data: Image array that is returned by the process_image function
-  
-  Returns --> Dictionary with class and accuracy values
-
-  """
+ 
   # Mapping prediction results to the cassava leaf disease  type
   classes = {0: "แอนแทรคโนส", 
              1: "ใบไหม้",
